@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Dokumentacja aplikacji Galeria Zdjęć</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; background: #f9f9f9; }
+    h1, h2, h3 { color: #2c3e50; }
+    code, pre { background: #f4f4f4; padding: 2px 4px; border-radius: 3px; }
+    .section { margin-bottom: 2em; }
+    ul { margin-bottom: 1em; }
+    .swagger { background: #f4f4f4; padding: 1em; border-radius: 5px; font-size: 0.95em; }
+  </style>
+</head>
+<body>
+  <h1>Dokumentacja aplikacji "Galeria Zdjęć"</h1>
+
+  <div class="section">
+    <h2>1. Instrukcja uruchomienia/instalacji</h2>
+    <ul>
+      <li><b>Wymagania:</b> Node.js (18+), MongoDB, npm</li>
+      <li><b>Instalacja:</b>
+        <pre>
+cd gallery/gallery
+npm install
+        </pre>
+      </li>
+      <li><b>Uruchomienie bazy danych:</b> Upewnij się, że MongoDB działa lokalnie na porcie 27017.</li>
+      <li><b>Uruchomienie aplikacji:</b>
+        <pre>node ./bin/www</pre>
+      </li>
+      <li>Aplikacja dostępna pod adresem: <a href="http://localhost:3000">http://localhost:3000</a></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>2. Funkcjonalności</h2>
+    <ul>
+      <li>Rejestracja i logowanie użytkowników</li>
+      <li>Tworzenie, edycja i usuwanie galerii (właściciel/admin)</li>
+      <li>Dodawanie, edycja i usuwanie zdjęć (właściciel/admin)</li>
+      <li>Przeglądanie galerii i zdjęć</li>
+      <li>Sortowanie zdjęć alfabetycznie/najpopularniejsze/najnowsze</li>
+      <li> Filtrowanie zdjęć: moje/polubione/wszystkie</li>
+      <li>Komentowanie i lajkowanie zdjęć</li>
+      <li>Przeglądanie profilu użytkownika, statystyki</li>
+      <li>Usuwanie konta użytkownika (z usunięciem powiązanych danych)</li>
+      <li>Panel administratora (usuwanie użytkowników, wszystkich zdjęć, galerii, komentarzy)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>3. Wykorzystane technologie i pakiety</h2>
+    <ul>
+      <li>Node.js + Express</li>
+      <li>MongoDB + Mongoose</li>
+      <li>Pug (szablony widoków)</li>
+      <li>Multer (upload plików)</li>
+      <li>bcryptjs (hasła)</li>
+      <li>jsonwebtoken (autoryzacja JWT)</li>
+      <li>express-validator (walidacja)</li>
+      <li>cookie-parser</li>
+      <li>Bootstrap (UI)</li>
+      <li>Morgan (logi HTTP)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>4. Modele danych (kolekcje MongoDB)</h2>
+    <b>User</b>
+    <pre>{
+  name: String,
+  surname: String,
+  username: String,
+  password: String,
+  date: Date
+}</pre>
+    <b>Gallery</b>
+    <pre>{
+  name: String,
+  description: String,
+  date: Date,
+  user: ObjectId (User)
+}</pre>
+    <b>Image</b>
+    <pre>{
+  name: String,
+  description: String,
+  filename: String,
+  gallery: ObjectId (Gallery),
+  owner: ObjectId (User),
+  date: Date
+}</pre>
+    <b>Comment</b>
+    <pre>{
+  content: String,
+  author: ObjectId (User),
+  image: ObjectId (Image),
+  date: Date
+}</pre>
+    <b>Like</b>
+    <pre>{
+  user: ObjectId (User),
+  image: ObjectId (Image),
+  date: Date
+}</pre>
+  </div>
+
+  <div class="section">
+    <h2>5. Interfejs API (ścieżki)</h2>
+    <ul>
+      <li><b>/users</b>
+        <ul>
+          <li>GET /users/login – logowanie</li>
+          <li>POST /users/login – logowanie</li>
+          <li>GET /users/user_add – rejestracja</li>
+          <li>POST /users/user_add – rejestracja</li>
+          <li>GET /users/logout – wylogowanie</li>
+          <li>GET /users/ – lista użytkowników</li>
+          <li>GET /users/profile – profil</li>
+          <li>POST /users/profile – edycja profilu</li>
+          <li>GET /users/delete-account – usuwanie konta</li>
+          <li>POST /users/delete-account – usuwanie konta</li>
+        </ul>
+      </li>
+      <li><b>/galleries</b>
+        <ul>
+          <li>GET /galleries/ – lista galerii</li>
+          <li>GET /galleries/gallery_add – dodawanie galerii</li>
+          <li>POST /galleries/gallery_add – dodawanie galerii</li>
+          <li>GET /galleries/:id/edit – edycja galerii</li>
+          <li>POST /galleries/:id/edit – zapis edycji</li>
+          <li>POST /galleries/:id/delete – usuwanie galerii</li>
+        </ul>
+      </li>
+      <li><b>/images</b>
+        <ul>
+          <li>GET /images/ – lista zdjęć</li>
+          <li>GET /images/image_add – dodawanie zdjęcia</li>
+          <li>POST /images/image_add – dodawanie zdjęcia</li>
+          <li>GET /images/edit/:id – edycja zdjęcia</li>
+          <li>POST /images/edit/:id – zapis edycji</li>
+          <li>POST /images/delete/:id – usuwanie zdjęcia</li>
+          <li>GET /images/view/:id – szczegóły zdjęcia</li>
+          <li>POST /images/:imageId/comment – dodanie komentarza</li>
+          <li>POST /images/comment/:commentId/delete – usunięcie komentarza</li>
+          <li>POST /images/:imageId/like – like/unlike zdjęcia</li>
+          <li>GET /images/:imageId/likes – liczba polubień</li>
+          <li>GET /images/gallery/:galleryId – zdjęcia w galerii</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>6. Eksport/import przykładowych danych</h2>
+    <b>Import przykładowych danych do bazy testowej:</b>
+    <p>
+      Pliki z danymi <code>GalleryDB.comments.json</code>, <code>GalleryDB.galleries.json</code>, <code>GalleryDB.images.json</code>, <code>GalleryDB.users.json</code>, <code>GalleryDB.likes.json</code> zostały wyeksportowane do katalogu projektu, wykonaj poniższe polecenia w terminalu (w katalogu <code>/gallery</code>):
+    </p>
+    <pre>
+mongoimport --db GalleryDB --collection comments --file GalleryDB.comments.json --jsonArray
+mongoimport --db GalleryDB --collection galleries --file GalleryDB.galleries.json --jsonArray
+mongoimport --db GalleryDB --collection images --file GalleryDB.images.json --jsonArray
+mongoimport --db GalleryDB --collection users --file GalleryDB.users.json --jsonArray
+mongoimport --db GalleryDB --collection likes --file GalleryDB.likes.json --jsonArray
+    </pre>
+    <p>
+      Po imporcie możesz uruchomić aplikację i korzystać z przykładowych danych.<br>
+      Więcej informacji: <a href="https://www.mongodb.com/docs/compass/current/import-export/" target="_blank">MongoDB Import/Export</a>
+    </p>
+    <h3>Jak połączyć MongoDB Compass z tymi danymi?</h3>
+    <ol>
+      <li>Uruchom <b>MongoDB Compass</b>.</li>
+      <li>W polu <b>Connection String</b> wpisz:<br>
+        <code>mongodb://localhost:27017</code>
+      </li>
+      <li>Kliknij <b>Connect</b>.</li>
+      <li>Na liście po lewej znajdź bazę <b>GalleryDB</b>.</li>
+      <li>Po kliknięciu w <b>GalleryDB</b> zobaczysz kolekcje: <b>comments</b>, <b>galleries</b>, <b>images</b>, <b>users</b>, <b>likes</b>.</li>
+      <li>Możesz przeglądać, edytować i eksportować/importować dane bezpośrednio z poziomu Compass.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>7. Przykładowy fragment OpenAPI (Swagger)</h2>
+    <div class="swagger">
+<pre>
+openapi: 3.0.0
+info:
+  title: Galeria Zdjęć API
+  version: 1.0.0
+paths:
+  /users:
+    get:
+      summary: Lista użytkowników
+      responses:
+        '200':
+          description: OK
+  /galleries:
+    get:
+      summary: Lista galerii
+      responses:
+        '200':
+          description: OK
+  /images:
+    get:
+      summary: Lista zdjęć
+      responses:
+        '200':
+          description: OK
+</pre>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>8. Struktura katalogów</h2>
+    <pre>
+gallery/
+│   app.js
+│   package.json
+│
+├───bin/
+│       www
+│
+├───controllers/
+│       authController.js
+│       galleryController.js
+│       imageController.js
+│       userController.js
+│
+├───middleware/
+│       auth.js
+│
+├───models/
+│       comment.js
+│       gallery.js
+│       image.js
+│       like.js
+│       user.js
+│
+├───public/
+│   ├───images/
+│   ├───javascripts/
+│   └───stylesheets/
+│
+├───routes/
+│       galleries.js
+│       images.js
+│       index.js
+│       users.js
+│
+├───views/
+│       error.pug
+│       gallery_form_user.pug
+│       gallery_form.pug
+│       gallery_list.pug
+│       image_form.pug
+│       image_list.pug
+│       image_view.pug
+│       index.pug
+│       layout.pug
+│       login_form.pug
+│       user_delete_account.pug
+│       user_deleted.pug
+│       user_form.pug
+│       user_list.pug
+│       user_login_form.pug
+│       user_profile.pug
+│
+│   GalleryDB.comments.json
+│   GalleryDB.galleries.json
+│   GalleryDB.images.json
+│   GalleryDB.users.json
+│   GalleryDB.likes.json
+│
+└───Dokumentacja.html
+    </pre>
+  </div>
+
+  <div class="section">
+    <b>Autor:</b> Oliwia Groszek<br>
+  </div>
+</body>
+</html>

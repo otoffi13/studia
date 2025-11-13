@@ -1,0 +1,91 @@
+extends layout
+
+block content
+  h1= title
+  
+  // Sorting options
+  .mb-3
+    .btn-group(role='group')
+      a.btn.btn-outline-primary(class=(currentSort === 'name' ? 'active' : ''), href='?sort=name' + (showMyOnly ? '&my=true' : '') + (showLikedOnly ? '&liked=true' : '')) Alfabetycznie
+      a.btn.btn-outline-primary(class=(currentSort === 'date' ? 'active' : ''), href='?sort=date' + (showMyOnly ? '&my=true' : '') + (showLikedOnly ? '&liked=true' : '')) Najnowsze
+      a.btn.btn-outline-primary(class=(currentSort === 'likes' ? 'active' : ''), href='?sort=likes' + (showMyOnly ? '&my=true' : '') + (showLikedOnly ? '&liked=true' : '')) Najpopularniejsze
+    if currentUser
+      .btn-group.ml-2(role='group')
+        a.btn.btn-outline-success(class=(showMyOnly ? 'active' : ''), href='?sort=' + currentSort + '&my=true') Moje zdjęcia
+        a.btn.btn-outline-danger(class=(showLikedOnly ? 'active' : ''), href='?sort=' + currentSort + '&liked=true') Polubione
+        a.btn.btn-outline-secondary(class=(!showMyOnly && !showLikedOnly ? 'active' : ''), href='?sort=' + currentSort) Wszystkie zdjęcia
+  
+  if images.length
+    .row
+      each image in images
+        .col-md-4.mb-4
+          .card
+            .card-body
+              .position-relative
+                img.img-fluid.mb-3(
+                  src=`/images/${image.filename}`,
+                  alt=image.name,
+                  style='max-height:200px;width:100%;object-fit:cover;cursor:pointer;',
+                  data-toggle='modal',
+                  data-target='#imageModal',
+                  data-img=`/images/${image.filename}`
+                )
+                // Delete button - only show for owner or admin
+                if currentUser && image.owner && (currentUser.username === 'admin' || image.owner._id.equals(currentUser._id))
+                  form(action=`/images/delete/${image._id}`, method='POST', style='position:absolute;top:10px;right:10px;')
+                    button.btn.btn-link.p-0(type='submit', onclick='return confirm("Czy na pewno usunąć zdjęcie?")', title='Usuń zdjęcie', style='background:none;border:none;')
+                      svg(xmlns="http://www.w3.org/2000/svg", width="20", height="20", fill="red", viewBox="0 0 16 16")
+                        path(d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5.5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6zm3 .5a.5.5 0 0 1 .5-.5.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6zm-7-2A.5.5 0 0 1 4 4h8a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H4a.5.5 0 0 1-.5-.5v-1zM2.5 4a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v1a2 2 0 0 1-2 2v6a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2V7a2 2 0 0 1-2-2V4z")
+              h5.card-title= image.name
+              if image.description
+                p.card-text= image.description
+              if image.owner && image.owner.username
+                p.mb-0.text-muted Autor: #{image.owner.username}
+              else
+                p.mb-0.text-muted Autor: brak danych
+              if image.date
+                p.mb-0.text-muted Data: #{image.date.toLocaleDateString()}
+              
+              // Like section
+              .like-section.mt-2
+                .d-flex.align-items-center
+                  svg(
+                    xmlns="http://www.w3.org/2000/svg", 
+                    width="20", 
+                    height="20", 
+                    fill="#6c757d",
+                    viewBox="0 0 16 16"
+                  )
+                    path(d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z")
+                  span.like-count.ms-1.text-muted(data-image-id=image._id) #{image.likeCount}
+              
+              if currentUser && image.owner && (currentUser.username === 'admin' || image.owner._id.equals(currentUser._id))
+                .mt-2
+                  a.btn.btn-warning.btn-sm.me-2(href=`/images/edit/${image._id}`) Edytuj
+              a.btn.btn-primary.btn-sm(href=`/images/view/${image._id}`) Zobacz zdjęcie
+  else
+    .text-center
+      p Brak zdjęć do wyświetlenia
+      a.btn.btn-primary(href='/images/image_add') Dodaj pierwsze zdjęcie
+
+  // Modal do powiększania zdjęcia
+  div.modal.fade#imageModal(tabindex='-1' role='dialog')
+    div.modal-dialog.modal-dialog-centered(role='document')
+      div.modal-content
+        div.modal-body
+          img#modalImage.img-fluid(src='', alt='Powiększone zdjęcie')
+
+block scripts
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      var imageModal = document.getElementById('imageModal');
+      var modalImage = document.getElementById('modalImage');
+      document.querySelectorAll('img[data-toggle="modal"]').forEach(function(img) {
+        img.addEventListener('click', function() {
+          modalImage.src = img.getAttribute('data-img');
+        });
+      });
+      imageModal.addEventListener('hidden.bs.modal', function () {
+        modalImage.src = '';
+      });
+    });

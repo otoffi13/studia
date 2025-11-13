@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  h1=title
+
+  form(method='POST')
+    div.form-group
+      label(for='g_name') Nazwa galerii:
+      input#g_name.form-control(type='text', placeholder='min. 2 litery', name='g_name', required, value=(gallery ? gallery.name : ''))
+      label(for='g_description') Opis:
+      input#g_description.form-control(type='text', placeholder='min. 2 litery', name='g_description', required, value=(gallery ? gallery.description : ''))
+      label Właściciel:
+      input.form-control(type='text', readonly, value=(user ? user.name + ' ' + user.surname : ''))
+    button.btn.btn-primary(type='submit') Zapisz
+
+  if messages
+    ul
+      for message in messages
+        li!= message

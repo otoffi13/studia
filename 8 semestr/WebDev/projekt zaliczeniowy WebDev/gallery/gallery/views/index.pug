@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  .welcome-section.text-center
+    h1= title
+    p.welcome-text Witaj w naszej Galerii Zdjęć!
+    p.subtitle Miejsce gdzie możesz dzielić się swoimi najpiękniejszymi wspomnieniami
+    
+    .stats-section.mt-5
+      .row
+        .col-md-4
+          .stat-card
+            h3 Galerie
+            p.text-muted Przejrzyj wszystkie galerie
+            a.btn.btn-primary(href='/galleries') Zobacz galerie
+        .col-md-4
+          .stat-card
+            h3 Zdjęcia
+            p.text-muted Odkryj piękne zdjęcia
+            a.btn.btn-primary(href='/images') Zobacz zdjęcia
+        .col-md-4
+          .stat-card
+            h3 Użytkownicy
+            p.text-muted Poznaj społeczność
+            a.btn.btn-primary(href='/users') Zobacz użytkowników

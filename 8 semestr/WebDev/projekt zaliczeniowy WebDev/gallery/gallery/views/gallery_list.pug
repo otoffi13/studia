@@ -1,0 +1,40 @@
+extends layout
+
+block content
+  h1= title
+  
+  // Sorting options
+  .mb-3
+    .btn-group(role='group')
+      a.btn.btn-outline-primary(class=(currentSort === 'name' ? 'active' : ''), href='?sort=name' + (showMyOnly ? '&my=true' : '')) Alfabetycznie
+      a.btn.btn-outline-primary(class=(currentSort === 'date' ? 'active' : ''), href='?sort=date' + (showMyOnly ? '&my=true' : '')) Najnowsze
+    if currentUser
+      .btn-group.ml-2(role='group')
+        a.btn.btn-outline-success(class=(showMyOnly ? 'active' : ''), href='?sort=' + currentSort + '&my=true') Moje galerie
+        a.btn.btn-outline-secondary(class=(!showMyOnly ? 'active' : ''), href='?sort=' + currentSort) Wszystkie galerie
+  
+  if gallery_list.length
+    .row
+      each gallery in gallery_list
+        .col-md-4.mb-4
+          .card
+            .card-body
+              h5.card-title= gallery.name
+              p.card-text= gallery.description
+              if gallery.user
+                p.mb-0.text-muted Właściciel: #{gallery.user.username}
+              else
+                p.mb-0.text-muted Właściciel: brak danych
+              p.mb-0.text-muted Data: #{gallery.date.toLocaleDateString()}
+              a.btn.btn-primary.mt-2(href='/images/gallery/' + gallery._id) Zobacz zdjęcia
+              if currentUser && gallery.user && (currentUser.username === 'admin' || gallery.user._id.equals(currentUser._id))
+                .mt-2
+                  a.btn.btn-warning.btn-sm.me-2(href=`/galleries/${gallery._id}/edit`) Edytuj
+                  form(action=`/galleries/${gallery._id}/delete`, method='POST', style='display:inline')
+                    button.btn.btn-danger.btn-sm(type='submit', onclick='return confirm("Czy na pewno usunąć galerię?")', title='Usuń galerię')
+                      svg(xmlns="http://www.w3.org/2000/svg", width="16", height="16", fill="currentColor", viewBox="0 0 16 16")
+                        path(d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5.5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6zm3 .5a.5.5 0 0 1 .5-.5.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6zm-7-2A.5.5 0 0 1 4 4h8a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H4a.5.5 0 0 1-.5-.5v-1zM2.5 4a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v1a2 2 0 0 1-2 2v6a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2V7a2 2 0 0 1-2-2V4z")
+  else
+    .text-center
+      p Brak galerii do wyświetlenia
+      a.btn.btn-primary(href='/galleries/gallery_add') Dodaj pierwszą galerię

@@ -1,0 +1,34 @@
+extends layout
+
+block content
+  h1=title
+
+  form(method='POST')
+    div.form-group
+      label(for='g_name') Nazwa galerii:
+      input#g_name.form-control(type='text', placeholder='min. 2 litery' name='g_name' required value=(undefined===gallery ? '' : gallery.name) )
+      label(for='g_description') Opis:
+      input#g_description.form-control(type='text', placeholder='min. 2 litery' name='g_description' required value=(undefined===gallery ? '' : gallery.description))
+      
+      label(for='g_user') Właściciel:
+      if isAdmin
+        select#g_user.form-control(name='g_user' required)
+          option(value='') --Wybierz użytkownika--
+          for user in users
+            if gallery && gallery.user && user._id.toString() === gallery.user._id.toString()
+              option(value=user._id selected) #{user.name} #{user.surname}
+            else
+              option(value=user._id) #{user.name} #{user.surname}
+      else
+        input#g_user.form-control(type='text', name='g_user', value=(user ? user._id : ''), readonly)
+        | #{user ? user.name + ' ' + user.surname : ''}
+    button.btn.btn-primary(type='submit') Zapisz
+
+  if messages
+    ul
+      for message in messages
+        li!= message
+
+  script.
+    const token = "your_token_here";
+    res.cookie("token", token, { httpOnly: true, sameSite: 'lax' });

@@ -1,0 +1,53 @@
+extends layout
+
+block content
+  h1= title
+
+  .profile-container
+    .row
+      .col-md-8
+        .profile-card
+          h3.card-title Dane konta
+          form(method='POST', action='/users/profile')
+            .form-group
+              label(for='name') Imię
+              input.form-control(type='text', name='name', value=user.name, required)
+            .form-group
+              label(for='surname') Nazwisko
+              input.form-control(type='text', name='surname', value=user.surname, required)
+            .form-group
+              label(for='username') Nazwa użytkownika
+              input.form-control(type='text', name='username', value=user.username, required)
+            button.btn.btn-primary(type='submit') Zaktualizuj dane
+
+      .col-md-4
+        .stats-card
+          h3.card-title Statystyki
+          .stat-item
+            span.stat-label Galerie:
+            span.stat-value #{stats.galleries}
+          .stat-item
+            span.stat-label Zdjęcia:
+            span.stat-value #{stats.images}
+          .stat-item
+            span.stat-label Data rejestracji:
+            span.stat-value #{user.date ? user.date.toLocaleDateString() : 'Brak danych'}
+
+    .row.mt-4
+      .col-12
+        if user.username !== 'admin'
+          .danger-zone
+            h3.card-title.text-danger Strefa niebezpieczna
+            p.text-muted Tutaj możesz usunąć swoje konto. Ta operacja jest nieodwracalna!
+            a.btn.btn-danger(href='/users/delete-account') Usuń konto
+        else
+          .admin-info
+            h3.card-title.text-info Informacja dla administratora
+            p.text-muted Jako administrator nie możesz usunąć swojego konta. Skontaktuj się z innym administratorem w razie potrzeby.
+            a.btn.btn-info(href='/users') Zarządzaj użytkownikami
+
+  if messages
+    .messages
+      ul
+        for message in messages
+          li!= message 

@@ -1,0 +1,52 @@
+[{
+  "_id": {
+    "$oid": "6856e043db4679f8f57a4718"
+  },
+  "name": "admin",
+  "surname": "admin",
+  "username": "admin",
+  "password": "$2b$10$QQ5RBYgsoh.AXZznCIibi.wcGcqK4pt9wYIYD/ucAR8st.EbAPvQq",
+  "__v": 0,
+  "date": {
+    "$date": "2000-01-01T11:43:01.269Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6857d54cc86a9c2f54fcf2fd"
+  },
+  "name": "jan",
+  "surname": "kowalski",
+  "username": "jasio",
+  "password": "$2b$10$DdhzPgtHR5Gvm784JVLnOuiWHiozHt7fi8VYYsBRbrc63p4ey4Fr6",
+  "__v": 0,
+  "date": {
+    "$date": "2025-06-20T11:43:01.269Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6857d9c51b0c5b53927cbbbf"
+  },
+  "name": "janusz",
+  "surname": "korwin",
+  "username": "mikke",
+  "password": "$2b$10$YFMFGOp9zAQ6r3y7lXVmieu8voUB3LFuZ4ZI0.6BRGoK1BeNmJLhO",
+  "__v": 0,
+  "date": {
+    "$date": "2025-06-20T11:43:01.269Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6857e0071bfa0220d63b5f7e"
+  },
+  "name": "oliwia",
+  "surname": "groszek",
+  "username": "olis",
+  "password": "$2b$10$K.Xy01eiirW/WbKExk5X8etmw9U374upt9kFIeH1kTeWixOYKM5k6",
+  "__v": 0,
+  " date ": {
+    "$date": "2025-06-20T11:43:01.269Z"
+  }
+}]

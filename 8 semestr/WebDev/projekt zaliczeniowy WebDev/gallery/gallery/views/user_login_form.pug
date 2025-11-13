@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1=title
+  form(method='POST')
+    div.form-group
+      label(for='username') Nazwa użytkownika:
+      input#username.form-control(type='text', placeholder='nazwa użytkownika', name='username', required, value='')
+      label(for='password') Hasło:
+      input#password.form-control(type='password', placeholder='hasło', name='password', autocomplete='off', required, value='')
+    button.btn.btn-primary(type='submit') Zaloguj się
+  if messages
+    ul
+      for message in messages
+        li!= message

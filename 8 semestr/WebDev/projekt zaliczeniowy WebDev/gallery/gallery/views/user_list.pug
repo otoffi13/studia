@@ -1,0 +1,76 @@
+extends layout
+
+block content
+  h1= title
+
+  // Search form
+  .mb-4
+    form.form-inline.justify-content-center(method='GET', action='/users')
+      .input-group(style='max-width: 400px;')
+        input.form-control(
+          type='text', 
+          name='search', 
+          placeholder='Wyszukaj użytkownika po nicku...',
+          value=searchQuery
+        )
+        .input-group-append
+          button.btn.btn-primary(type='submit')
+            svg(xmlns="http://www.w3.org/2000/svg", width="16", height="16", fill="currentColor", viewBox="0 0 16 16")
+              path(d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z")
+        if searchQuery
+          .input-group-append
+            a.btn.btn-outline-secondary(href='/users', title='Wyczyść wyszukiwanie')
+              svg(xmlns="http://www.w3.org/2000/svg", width="16", height="16", fill="currentColor", viewBox="0 0 16 16")
+                path(d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z")
+                path(d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z")
+
+  .user-count-info
+    h4 Społeczność Galerii Zdjęć
+    if searchQuery
+      p Znaleziono #{users.length} użytkowników dla "#{searchQuery}"
+    else
+      p Łącznie #{users.length} użytkowników w systemie
+
+  if users.length
+    .row
+      each user in users
+        .col-md-6.mb-4
+          .card.user-card
+            .card-body
+              h5.card-title= user.name + ' ' + user.surname
+              .user-info
+                p.card-text
+                  strong Nazwa użytkownika: 
+                  span= user.username
+                p.card-text
+                  strong Data rejestracji: 
+                  span= user.date ? user.date.toLocaleDateString() : 'Brak danych'
+              
+              .stats-section
+                h6 Statystyki:
+                p.mb-1
+                  small.text-muted Galerie: #{user.stats.galleries}
+                p.mb-1
+                  small.text-muted Zdjęcia: #{user.stats.images}
+              
+              if currentUser && currentUser.username === 'admin'
+                if user.username !== 'admin'
+                  .admin-actions.mt-3
+                    form(action=`/users/delete/${user._id}`, method='POST', style='display:inline')
+                      button.btn.btn-danger.btn-sm(
+                        type='submit', 
+                        onclick='return confirm("Czy na pewno usunąć użytkownika ' + user.username + '? Ta operacja jest nieodwracalna!")',
+                        title='Usuń użytkownika'
+                      )
+                        svg(xmlns="http://www.w3.org/2000/svg", width="16", height="16", fill="currentColor", viewBox="0 0 16 16")
+                          path(d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5.5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6zm3 .5a.5.5 0 0 1 .5-.5.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6zm-7-2A.5.5 0 0 1 4 4h8a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H4a.5.5 0 0 1-.5-.5v-1zM2.5 4a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v1a2 2 0 0 1-2 2v6a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2V7a2 2 0 0 1-2-2V4z")
+                else
+                  .admin-info.mt-3
+                    span.badge.badge-info Administrator (nie można usunąć)
+              else
+                if user.username === 'admin'
+                  .admin-info.mt-3
+                    span.badge.badge-info Administrator
+  else
+    .text-center
+      p Brak użytkowników do wyświetlenia

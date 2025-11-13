@@ -1,0 +1,42 @@
+extends layout
+
+block content
+  .deleted-account-container.text-center
+    .success-card
+      .success-icon
+        svg(xmlns="http://www.w3.org/2000/svg", width="64", height="64", fill="currentColor", viewBox="0 0 16 16")
+          path(d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.97a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z")
+      
+      h1.text-success Konto zostało usunięte
+      
+      .success-content
+        p Twoje konto zostało pomyślnie usunięte wraz ze wszystkimi powiązanymi danymi.
+        
+        .what-happened
+          h4 Co zostało usunięte:
+          ul
+            li Wszystkie Twoje galerie
+            li Wszystkie Twoje zdjęcia
+            li Wszystkie Twoje komentarze
+            li Twoje konto użytkownika
+        
+        .next-steps
+          h4 Co dalej?
+          p Możesz:
+          ul
+            li 
+              a(href='/users/user_add') Utworzyć nowe konto
+            li 
+              a(href='/') Przejrzeć galerie jako gość
+            li 
+              a(href='/users/login') Zalogować się na inne konto
+        
+        .goodbye-message
+          p Dziękujemy za korzystanie z naszej Galerii Zdjęć!
+          p.text-muted Życzymy wszystkiego najlepszego!
+
+  if messages
+    .messages
+      ul
+        for message in messages
+          li!= message 

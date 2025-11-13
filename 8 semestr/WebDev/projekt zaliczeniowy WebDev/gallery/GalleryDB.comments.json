@@ -1,0 +1,48 @@
+[{
+  "_id": {
+    "$oid": "6857cd631df0c10515e204dd"
+  },
+  "content": "zajebisty",
+  "author": {
+    "$oid": "6856e043db4679f8f57a4718"
+  },
+  "image": {
+    "$oid": "6857c44a85847c3f73bf72b0"
+  },
+  "date": {
+    "$date": "2025-06-22T09:31:15.551Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6857d5c3c86a9c2f54fcf332"
+  },
+  "content": "zajebisty piesek",
+  "author": {
+    "$oid": "6857d54cc86a9c2f54fcf2fd"
+  },
+  "image": {
+    "$oid": "6857d5b2c86a9c2f54fcf322"
+  },
+  "date": {
+    "$date": "2025-06-22T10:06:59.341Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6857e01f1bfa0220d63b5fa0"
+  },
+  "content": "chcialabym taką",
+  "author": {
+    "$oid": "6857e0071bfa0220d63b5f7e"
+  },
+  "image": {
+    "$oid": "6857dfd31bfa0220d63b5f41"
+  },
+  "date": {
+    "$date": "2025-06-22T10:51:11.356Z"
+  },
+  "__v": 0
+}]

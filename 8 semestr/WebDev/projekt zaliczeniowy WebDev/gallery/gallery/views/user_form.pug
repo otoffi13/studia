@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  h1= title
+  if error
+    .alert.alert-danger= error
+  if messages
+    ul
+      for message in messages
+        li!= message
+  form(method='POST', action='/users/user_add')
+    .form-group
+      label(for='name') Imię
+      input.form-control(type='text', name='name', id='name', required value=(user && user.name ? user.name : ''))
+    .form-group
+      label(for='surname') Nazwisko
+      input.form-control(type='text', name='surname', id='surname', required value=(user && user.surname ? user.surname : ''))
+    .form-group
+      label(for='username') Nazwa użytkownika
+      input.form-control(type='text', name='username', id='username', required value=(user && user.username ? user.username : ''))
+    .form-group
+      label(for='password') Hasło
+      input.form-control(type='password', name='password', id='password', required)
+    button.btn.btn-primary(type='submit') Zarejestruj się

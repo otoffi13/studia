@@ -1,0 +1,141 @@
+extends layout
+
+block content
+  .container.mt-4
+    .row
+      .col-md-8
+        .card.image-view-container
+          .card-body
+            h2.card-title= image.name
+            if image.description
+              p.card-text.text-muted= image.description
+            img.img-fluid.mb-3(src=`/images/${image.filename}`, alt=image.name, style='max-width:100%;height:auto;border-radius:8px;')
+            
+            // Like system
+            .like-section.mb-3
+              if currentUser
+                button.btn.btn-link.p-0.like-button(
+                  data-image-id=image._id,
+                  data-liked=userLiked,
+                  title=userLiked ? 'Usuń like' : 'Polub zdjęcie'
+                )
+                  if userLiked
+                    svg.like-icon.liked(xmlns="http://www.w3.org/2000/svg", width="24", height="24", fill="currentColor", viewBox="0 0 16 16")
+                      path(d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z")
+                  else
+                    svg.like-icon(xmlns="http://www.w3.org/2000/svg", width="24", height="24", fill="currentColor", viewBox="0 0 16 16")
+                      path(d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z")
+              else
+                svg.like-icon.disabled(xmlns="http://www.w3.org/2000/svg", width="24", height="24", fill="currentColor", viewBox="0 0 16 16")
+                  path(d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z")
+              
+              span.like-count #{likeCount} polubień
+            
+            .row
+              .col-md-6
+                if image.owner && image.owner.username
+                  p.text-muted Autor: #{image.owner.username}
+                if image.date
+                  p.text-muted Data: #{image.date.toLocaleDateString()}
+              .col-md-6
+                if image.gallery
+                  p.text-muted Galeria: #{image.gallery.name}
+      
+      .col-md-4
+        .card
+          .card-header
+            h5 Komentarze (#{comments.length})
+          .card-body.comment-section
+            if currentUser
+              .comment-form
+                form(action=`/images/${image._id}/comment`, method='POST')
+                  .form-group
+                    textarea.form-control(name='content', rows='3', placeholder='Napisz komentarz...', required)
+                  button.btn.btn-primary.btn-sm(type='submit') Dodaj komentarz
+            else
+              p.text-muted Zaloguj się, aby dodać komentarz
+            
+            hr
+            
+            if comments.length > 0
+              each comment in comments
+                .comment
+                  .d-flex.justify-content-between.align-items-start
+                    div
+                      strong= comment.author ? comment.author.username : 'Nieznany użytkownik'
+                      small.text-muted.ml-2= comment.date.toLocaleDateString() + ' ' + comment.date.toLocaleTimeString()
+                      if currentUser && (currentUser.username === 'admin' || (comment.author && comment.author._id.equals(currentUser._id)))
+                        form(action=`/images/comment/${comment._id}/delete`, method='POST', style='display:inline;margin-left:10px;')
+                          button.btn.btn-link.btn-sm.p-0.text-danger(type='submit', onclick='return confirm("Czy na pewno usunąć komentarz?")', title='Usuń komentarz')
+                            svg(xmlns="http://www.w3.org/2000/svg", width="16", height="16", fill="currentColor", viewBox="0 0 16 16")
+                              path(d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5.5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6zm3 .5a.5.5 0 0 1 .5-.5.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6zm-7-2A.5.5 0 0 1 4 4h8a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H4a.5.5 0 0 1-.5-.5v-1zM2.5 4a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v1a2 2 0 0 1-2 2v6a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2V7a2 2 0 0 1-2-2V4z")
+                  p.mb-0= comment.content
+            else
+              p.text-muted Brak komentarzy. Bądź pierwszy!
+    
+    .mt-3
+      a.btn.btn-secondary(href='/images') Powrót do listy zdjęć
+
+  if messages
+    .alert.alert-danger.mt-3
+      ul.mb-0
+        for message in messages
+          li!= message
+
+block scripts
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      const likeButtons = document.querySelectorAll('.like-button');
+      
+      likeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const imageId = this.getAttribute('data-image-id');
+          const isLiked = this.getAttribute('data-liked') === 'true';
+          
+          fetch(`/images/${imageId}/like`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.error) {
+              alert(data.error);
+              return;
+            }
+            
+            // Aktualizuj ikonę
+            const likeIcon = this.querySelector('.like-icon');
+            if (data.liked) {
+              likeIcon.innerHTML = '<path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>';
+              likeIcon.classList.add('liked');
+              this.setAttribute('data-liked', 'true');
+              this.setAttribute('title', 'Usuń like');
+            } else {
+              likeIcon.innerHTML = '<path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>';
+              likeIcon.classList.remove('liked');
+              this.setAttribute('data-liked', 'false');
+              this.setAttribute('title', 'Polub zdjęcie');
+            }
+            
+            // Aktualizuj licznik
+            const likeCount = document.querySelector('.like-count');
+            likeCount.textContent = data.likeCount + ' polubień';
+            likeCount.classList.add('updated');
+            setTimeout(() => {
+              likeCount.classList.remove('updated');
+            }, 500);
+            
+            // Pokaż komunikat
+            if (data.message) {
+              // Można dodać toast notification tutaj
+            }
+          })
+          .catch(error => {
+            console.error('Błąd:', error);
+            alert('Wystąpił błąd podczas like\'owania');
+          });
+        });
+      });
+    }); 

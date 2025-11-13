@@ -1,0 +1,90 @@
+[{
+  "_id": {
+    "$oid": "6857d59dc86a9c2f54fcf317"
+  },
+  "name": "kotek",
+  "description": "kotecek",
+  "filename": "1750586781894-pol_pl_Puzzle-200-el-Maly-kotek-7867_2.jpg",
+  "gallery": {
+    "$oid": "6857d56bc86a9c2f54fcf304"
+  },
+  "owner": {
+    "$oid": "6857d54cc86a9c2f54fcf2fd"
+  },
+  "date": {
+    "$date": "2025-06-22T10:06:21.909Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6857d5b2c86a9c2f54fcf322"
+  },
+  "name": "piesek v2",
+  "description": "pieseczek",
+  "filename": "1750586802186-337625771-515x342.jpg",
+  "gallery": {
+    "$oid": "6857d56bc86a9c2f54fcf304"
+  },
+  "owner": {
+    "$oid": "6857d54cc86a9c2f54fcf2fd"
+  },
+  "date": {
+    "$date": "2025-06-22T10:06:42.195Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6857da261b0c5b53927cbbdf"
+  },
+  "name": "król",
+  "description": "mój król",
+  "filename": "1750587942240-YJ_ktkpTURBXy81ZTcyZTg2OTE2Y2M3NzlmZjY4ODk1ZDQ2NTVlZTc4Ni5qcGeSlQMAOs0K4M0GHpMFzQSwzQJY.jpg",
+  "gallery": {
+    "$oid": "6857d9fa1b0c5b53927cbbc9"
+  },
+  "owner": {
+    "$oid": "6857d9c51b0c5b53927cbbbf"
+  },
+  "date": {
+    "$date": "2025-06-22T10:25:42.249Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6857dfc11bfa0220d63b5f3b"
+  },
+  "name": "honda civic",
+  "description": "lubie ją",
+  "filename": "1750589377461-honda-civic-type-r-fk8-facelift-2020.jpg",
+  "gallery": {
+    "$oid": "6857d94b50c5133fffccc786"
+  },
+  "owner": {
+    "$oid": "6857d54cc86a9c2f54fcf2fd"
+  },
+  "date": {
+    "$date": "2025-06-22T10:49:37.478Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6857dfd31bfa0220d63b5f41"
+  },
+  "name": "alfa romeo",
+  "description": "nie wiem jaka",
+  "filename": "1750589395369-AR-GIULIA-M24-538X378-KEYSTRENGHTS-1.jpg",
+  "gallery": {
+    "$oid": "6857d94b50c5133fffccc786"
+  },
+  "owner": {
+    "$oid": "6857d54cc86a9c2f54fcf2fd"
+  },
+  "date": {
+    "$date": "2025-06-22T10:49:55.376Z"
+  },
+  "__v": 0
+}]

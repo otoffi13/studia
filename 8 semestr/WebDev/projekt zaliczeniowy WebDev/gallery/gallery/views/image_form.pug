@@ -1,0 +1,60 @@
+extends layout
+
+block content
+  h1= title
+
+  form(method='POST', enctype=(image ? undefined : 'multipart/form-data'), action=(image ? `/images/edit/${image._id}` : '/images/image_add'))
+    .form-group
+      label(for='name') Nazwa zdjęcia
+      input.form-control(type='text', name='name', required, value=(image ? image.name : ''))
+    .form-group
+      label(for='description') Opis
+      input.form-control(type='text', name='description', value=(image ? image.description : ''))
+    
+    // Gallery selection - only show when adding new image
+    if !image
+      .form-group
+        label(for='gallery') Galeria
+        select.form-control(name='gallery', required)
+          each gallery in galleries
+            option(value=gallery._id.toString())= gallery.name
+    else
+      // Show current gallery info when editing
+      .form-group
+        label Aktualna galeria
+        p.form-control-static= image.gallery ? image.gallery.name : 'Brak galerii'
+        // Hidden field with current gallery ID
+        input(type='hidden', name='gallery', value=(image.gallery ? image.gallery._id.toString() : ''))
+    
+    if !image
+      .form-group
+        label(for='file') Plik JPG
+        input.form-control(type='file', name='file', accept='.jpg,.jpeg', required)
+    else
+      .form-group
+        label Aktualny plik
+        p.form-control-static= image.filename
+        small.text-muted (Plik nie może być zmieniony podczas edycji)
+    button.btn.btn-primary(type='submit')= image ? 'Zaktualizuj zdjęcie' : 'Dodaj zdjęcie'
+
+  if messages
+    .messages
+      ul
+        for message in messages
+          li!= message
+
+  // Form validation
+  if image
+    script.
+      document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        const nameInput = document.querySelector('input[name="name"]');
+        
+        form.addEventListener('submit', function(e) {
+          if (nameInput && nameInput.value.trim().length < 2) {
+            e.preventDefault();
+            alert('Nazwa zdjęcia musi mieć co najmniej 2 znaki!');
+            return false;
+          }
+        });
+      });
