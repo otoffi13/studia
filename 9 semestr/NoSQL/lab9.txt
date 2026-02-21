@@ -1,0 +1,57 @@
+---Przypadek: dodawanie książki; Aktor: bibliotekarz
+	Warunki wstępne: dostawa nowej książki; warunki końcowe: książka jest dostępna do wypożyczenia
+	Scenariusz:
+		- dostawa nowej książki
+		- dodanie książki do systemu
+		- książka jest dostępna do wypożyczenia
+---Przypadek: usunięcie książki; Aktor: bibliotekarz, czytelnik
+	Warunki wstępne: książka jest niezdatna do użytku; warunki końcowe: książka zostaje usunięta z biblioteki
+	Scenariusz:
+		- zgłoszenie wadliwej książki przez czytelnika
+		- usunięcie książki z systemu i jej utylizacja przez bibliotekarza
+---Przypadek: wypożyczenie; Aktor: czytelnik, bibliotekarz
+	Warunki początkowe: czytelnik chce wypożyczyć książkę; Warunki końcowe: wypożyczenie książki
+	Scenariusz:
+		- czytelnik chce wypożyczyć książkę
+		- bibliotekarz sprawdza czy czytelnik może wypożyczyć książkę
+		- bibliotekarz sprawdza dostępność książki
+		- bibliotekarz dodaje informację o wypożyczeniu książki
+		- czytelnik wypożycza książkę
+---Przypadek: zwrócenie książki; Aktor: czytelnik, bibliotekarz
+	Warunki początkowe: czytelnik chce zwrócić książkę; warunki końcowe: czytelnik zwraca książkę
+	Scenariusz:
+		- czytelnik zgłasza chęć zwrócenia książki
+		- bibliotekarz sprawdza stan książki
+		- bibliotekarz wprowadza informację o zmianie statusu książki
+---Przypadek: zamknięcie systemu; Aktor: bibliotekarz
+	Warunki początkowe: system jest otwarty; Warunki końcowe: system jest zamknięty
+	Scenariusz:
+		- zapisanie wszystkich wykonanych w ciągu dnia operacji do pliku .csv
+		- zamknięcie systemu
+---Przypadek: otwarcie systemu; Aktor: bibliotekarz
+	Warunki wstępne: system jest zamknięty; Warunki końcowe: system jest otwarty
+	Scenariusz: 
+		- włączenie systemu
+---Przypadek: dodanie czytelnika, Aktor: bibliotekarz, czytelnik
+	Warunki początkowe: czytelnik chce założyć konto; Warunki końcowe: czytelnik posiada konto
+	Scenariusz:
+		- czytelnik wyraża chęć założenia konta
+		- czytelnik podaje wymagane dane
+		- bibliotekarz wprowadza dane do systemu
+		- czytelnik posiada już konto
+
+---Zapytania Redis:
+	Dodanie książki: HMSET item:id title "tytuł" author "author" type "typ" total_count "3" available_count "3" status "available"
+	Usunięcie książki: DEL book:id
+	Wypożycznie: SCARD ksiazkiCzytelnika:id_uzytkownika 
+			HGET book:id_ksiazki wypozyczona		
+			HSET book:id_ksiazki wypozyczona "tak"
+			SADD ksiazkiCzytelnika:id_uzytkownika book:id_ksiazki
+	Zrócenie: SREM ksiazkiCzytelnika:id_uzytkownika  book:id_ksiazki
+			HSET book:id_ksiazki wypozyczona "NIE"
+	Zamknięnie systemu: redis-server --shutdown
+	Uruchomienie systemu: redis-server
+			redis-cli
+	Dodanie czytelnika: HMSET czytelnik:id name "imie" surename "nazwisko" pesel "0000000000" active_loans "3"
+
+	

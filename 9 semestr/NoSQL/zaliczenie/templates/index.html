@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Głosowanie online</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .poll-item { margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; }
+        .option { margin-bottom: 5px; }
+        button { margin-top: 5px; }
+        #poll-container, #create-poll-container { display: none; margin-top: 30px; }
+        .chart-container { max-width: 350px; margin: 20px auto;}
+
+    </style>
+</head>
+<body>
+    <h1>Głosowanie online</h1>
+
+    <!-- Strona startowa -->
+    <div id="home-container">
+        <button onclick="showCreatePoll()">Stwórz nową ankietę</button>
+        <h2>Lista ankiet</h2>
+        <div id="polls-list"></div>
+    </div>
+
+    <!-- Tworzenie ankiety -->
+    <div id="create-poll-container">
+        <h2>Nowa ankieta</h2>
+        <form id="create-poll-form">
+            Pytanie: <input type="text" id="new-poll-question" required><br>
+            Opcje (oddzielone przecinkiem): <input type="text" id="new-poll-options" required><br>
+            Maksymalna liczba odpowiedzi: <input type="number" id="new-poll-max" min="1" required><br>
+            Czas zakończenia: <input type="datetime-local" id="new-poll-end" required><br>
+            <button type="submit">Stwórz ankietę</button>
+            <button type="button" onclick="showHome()">Anuluj</button>
+        </form>
+    </div>
+
+    <!-- Głosowanie w ankiecie -->
+    <div id="poll-container">
+        <button onclick="showHome()">Powrót do listy ankiet</button>
+        <h2 id="question"></h2>
+        <form id="vote-form">
+            <div id="options"></div>
+            <button type="submit">Oddaj głos</button>
+        </form>
+        <h2>Wyniki</h2>
+        <ul id="results-list"></ul>
+        <div class="chart-container">
+            <canvas id="results-chart"></canvas>
+        </div>
+
+    </div>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="static/script.js"></script>
+</body>
+</html>
